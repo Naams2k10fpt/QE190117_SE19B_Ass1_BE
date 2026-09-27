@@ -38,4 +38,17 @@ public class TagRepository : ITagRepository
         await _context.SaveChangesAsync();
         return tag;
     }
+    public async Task<bool> UpdateAsync(int id, TagEntity changes)
+    {
+        var tag = await _context.Tags.FindAsync(id);
+
+        if (tag is null)
+            return false;
+
+        tag.TagName = changes.TagName;
+        tag.Color = changes.Color;
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
 }

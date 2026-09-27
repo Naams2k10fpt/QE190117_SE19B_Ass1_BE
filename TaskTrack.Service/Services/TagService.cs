@@ -44,4 +44,14 @@ public class TagService : ITagService
             saved.TagName,
             saved.Color);
     }
+    public Task<bool> UpdateAsync(int id, CreateTagDto input)
+    {
+        var changes = new TaskTrack.Repo.Models.Tag
+        {
+            TagName = input.TagName.Trim(),
+            Color = input.Color?.Trim().ToUpperInvariant()
+        };
+
+        return _repository.UpdateAsync(id, changes);
+    }
 }

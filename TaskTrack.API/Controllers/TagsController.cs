@@ -35,4 +35,23 @@ public class TagsController : ControllerBase
         var created = await _service.CreateAsync(input);
         return StatusCode(201, created);
     }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(
+    int id, [FromBody] CreateTagDto input)
+    {
+        if (await _service.NameExistsAsync(input.TagName, id))
+        {
+            ModelState.AddModelError(
+                "TagName", "Tag name already exists.");
+            return ValidationProblem(ModelState);
+        }
+
+        var updated = await _service.UpdateAsync(id, input);
+
+        if (!updated)
+            return NotFound();
+
+        return NoContent();
+    }
 }
