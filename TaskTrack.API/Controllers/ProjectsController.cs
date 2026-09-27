@@ -21,4 +21,15 @@ public class ProjectsController : ControllerBase
         var projects = await _service.GetActiveAsync();
         return Ok(projects);
     }
+
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<ProjectDetailDto>> GetById(int id)
+    {
+        var project = await _service.GetByIdAsync(id);
+
+        if (project is null)
+            return NotFound();
+
+        return Ok(project);
+    }
 }
