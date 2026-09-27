@@ -7,4 +7,5 @@ namespace TaskTrack.Repo.Repositories;
 public interface IDepartmentRepository
 {
     Task<List<Department>> GetActiveAsync();
+    Task<Department?> GetByIdWithProjectsAsync(int id);
 }

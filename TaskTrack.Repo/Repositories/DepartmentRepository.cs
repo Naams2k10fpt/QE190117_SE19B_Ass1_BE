@@ -24,4 +24,11 @@ public class DepartmentRepository : IDepartmentRepository
             .OrderBy(d => d.DepartmentName)
             .ToListAsync();
     }
+    public Task<Department?> GetByIdWithProjectsAsync(int id)
+    {
+        return _context.Departments
+            .AsNoTracking()
+            .Include(d => d.Projects)
+            .FirstOrDefaultAsync(d => d.DepartmentId == id);
+    }
 }

@@ -24,4 +24,27 @@ public class DepartmentService : IDepartmentService
                 d.DepartmentDescription))
             .ToList();
     }
+    public async Task<DepartmentDetailDto?> GetByIdAsync(int id)
+    {
+        var department = await _repository.GetByIdWithProjectsAsync(id);
+
+        if (department is null)
+            return null;
+
+        var projects = department.Projects
+            .OrderBy(p => p.ProjectName)
+            .Select(p => new DepartmentProjectDto(
+                p.ProjectId,
+                p.ProjectName,
+                p.Status,
+                p.IsActive))
+            .ToList();
+
+        return new DepartmentDetailDto(
+            department.DepartmentId,
+            department.DepartmentName,
+            department.DepartmentDescription,
+            department.IsActive,
+            projects);
+    }
 }

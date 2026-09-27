@@ -21,4 +21,15 @@ public class DepartmentsController : ControllerBase
         var departments = await _service.GetActiveAsync();
         return Ok(departments);
     }
+
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<DepartmentDetailDto>> GetById(int id)
+    {
+        var department = await _service.GetByIdAsync(id);
+
+        if (department is null)
+            return NotFound();
+
+        return Ok(department);
+    }
 }
