@@ -68,4 +68,16 @@ public class ProjectRepository : IProjectRepository
             .OrderBy(p => p.ProjectName)
             .ToListAsync();
     }
+    public Task<bool> DepartmentExistsAsync(int departmentId)
+    {
+        return _context.Departments
+            .AnyAsync(d => d.DepartmentId == departmentId);
+    }
+
+    public async Task<Project> AddAsync(Project project)
+    {
+        _context.Projects.Add(project);
+        await _context.SaveChangesAsync();
+        return project;
+    }
 }

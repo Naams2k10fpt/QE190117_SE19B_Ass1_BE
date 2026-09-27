@@ -62,4 +62,32 @@ public class ProjectsController : ControllerBase
 
         return Ok(projects);
     }
+
+    [HttpPost]
+    public async Task<ActionResult<ProjectDetailDto>> Create(
+    [FromBody] CreateProjectDto input)
+    {
+        if (input.StartDate.HasValue && input.EndDate.HasValue &&
+            input.EndDate.Value < input.StartDate.Value)
+        {
+            ModelState.AddModelError(
+                "EndDate", "EndDate cannot be before StartDate.");
+        }
+
+        if (input.DepartmentId.HasValue &&
+            !await _service.DepartmentExistsAsync(input.DepartmentId.Value))
+        {
+            ModelState.AddModelError(
+                "DepartmentId", "Department does not exist.");
+        }
+
+        if (!ModelState.IsValid)
+            return ValidationProblem(ModelState);
+
+        var created = await _service.CreateAsync(input);
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id = created.ProjectId },
+            created);
+    }
 }

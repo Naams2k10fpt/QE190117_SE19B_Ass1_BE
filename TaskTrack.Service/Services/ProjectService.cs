@@ -100,4 +100,28 @@ public class ProjectService : IProjectService
                 p.Department.DepartmentName))
             .ToList();
     }
+    public Task<bool> DepartmentExistsAsync(int departmentId)
+    {
+        return _repository.DepartmentExistsAsync(departmentId);
+    }
+
+    public async Task<ProjectDetailDto> CreateAsync(CreateProjectDto input)
+    {
+        var project = new TaskTrack.Repo.Models.Project
+        {
+            ProjectName = input.ProjectName.Trim(),
+            Description = input.Description?.Trim(),
+            StartDate = input.StartDate!.Value,
+            EndDate = input.EndDate,
+            Status = input.Status!.Value,
+            DepartmentId = input.DepartmentId!.Value,
+            IsActive = true
+        };
+
+        var saved = await _repository.AddAsync(project);
+
+        return await GetByIdAsync(saved.ProjectId)
+            ?? throw new InvalidOperationException(
+                "Created project could not be loaded.");
+    }
 }

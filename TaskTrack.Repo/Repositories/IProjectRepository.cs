@@ -11,4 +11,6 @@ public interface IProjectRepository
     Task<List<Project>> GetByDepartmentAsync(int departmentId);
     Task<List<Project>> SearchAsync(
     string? name, short? status, int? departmentId);
+    Task<bool> DepartmentExistsAsync(int departmentId);
+    Task<Project> AddAsync(Project project);
 }
