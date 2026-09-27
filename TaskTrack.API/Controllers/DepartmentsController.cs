@@ -1,0 +1,24 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using TaskTrack.Service.DTOs;
+using TaskTrack.Service.Interfaces;
+
+namespace TaskTrack.API.Controllers;
+
+[ApiController]
+[Route("api/departments")]
+public class DepartmentsController : ControllerBase
+{
+    private readonly IDepartmentService _service;
+
+    public DepartmentsController(IDepartmentService service)
+    {
+        _service = service;
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<List<DepartmentListItemDto>>> GetActive()
+    {
+        var departments = await _service.GetActiveAsync();
+        return Ok(departments);
+    }
+}
