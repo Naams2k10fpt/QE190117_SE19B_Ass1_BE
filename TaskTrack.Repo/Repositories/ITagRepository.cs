@@ -10,4 +10,6 @@ public interface ITagRepository
     Task<bool> NameExistsAsync(string name, int? excludeId = null);
     Task<TagEntity> AddAsync(TagEntity tag);
     Task<bool> UpdateAsync(int id, TagEntity changes);
+    Task<TagEntity?> GetByIdWithTasksAsync(int id);
+    Task<bool> DeleteAsync(int id);
 }

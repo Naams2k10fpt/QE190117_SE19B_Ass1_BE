@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TaskTrack.Service.DTOs;
 using TaskTrack.Service.Interfaces;
+using TaskTrack.Service.Results;
 
 namespace TaskTrack.API.Controllers;
 
@@ -51,6 +52,20 @@ public class TagsController : ControllerBase
 
         if (!updated)
             return NotFound();
+
+        return NoContent();
+    }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var result = await _service.DeleteAsync(id);
+
+        if (result == DeleteTagResult.NotFound)
+            return NotFound();
+
+        if (result == DeleteTagResult.HasTasks)
+            return BadRequest(new { message = "Tag has linked tasks." });
 
         return NoContent();
     }

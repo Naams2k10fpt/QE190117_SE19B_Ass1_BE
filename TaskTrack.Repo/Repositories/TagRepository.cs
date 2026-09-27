@@ -51,4 +51,23 @@ public class TagRepository : ITagRepository
         await _context.SaveChangesAsync();
         return true;
     }
+    public Task<TagEntity?> GetByIdWithTasksAsync(int id)
+    {
+        return _context.Tags
+            .AsNoTracking()
+            .Include(tag => tag.Tasks)
+            .FirstOrDefaultAsync(tag => tag.TagId == id);
+    }
+
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var tag = await _context.Tags.FindAsync(id);
+
+        if (tag is null)
+            return false;
+
+        _context.Tags.Remove(tag);
+        await _context.SaveChangesAsync();
+        return true;
+    }
 }

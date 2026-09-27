@@ -1,6 +1,7 @@
 ﻿using TaskTrack.Repo.Repositories;
 using TaskTrack.Service.DTOs;
 using TaskTrack.Service.Interfaces;
+using TaskTrack.Service.Results;
 
 namespace TaskTrack.Service.Services;
 
@@ -53,5 +54,21 @@ public class TagService : ITagService
         };
 
         return _repository.UpdateAsync(id, changes);
+    }
+    public async Task<DeleteTagResult> DeleteAsync(int id)
+    {
+        var tag = await _repository.GetByIdWithTasksAsync(id);
+
+        if (tag is null)
+            return DeleteTagResult.NotFound;
+
+        if (tag.Tasks.Any())
+            return DeleteTagResult.HasTasks;
+
+        var deleted = await _repository.DeleteAsync(id);
+
+        return deleted
+            ? DeleteTagResult.Deleted
+            : DeleteTagResult.NotFound;
     }
 }
