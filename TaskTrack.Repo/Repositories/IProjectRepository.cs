@@ -14,4 +14,5 @@ public interface IProjectRepository
     Task<bool> DepartmentExistsAsync(int departmentId);
     Task<Project> AddAsync(Project project);
     Task<bool> UpdateAsync(int id, Project changes);
+    Task<bool> DeleteAsync(int id);
 }

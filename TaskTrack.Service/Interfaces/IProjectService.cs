@@ -1,4 +1,5 @@
 ﻿using TaskTrack.Service.DTOs;
+using TaskTrack.Service.Results;
 
 namespace TaskTrack.Service.Interfaces;
 
@@ -12,4 +13,5 @@ public interface IProjectService
     Task<bool> DepartmentExistsAsync(int departmentId);
     Task<ProjectDetailDto> CreateAsync(CreateProjectDto input);
     Task<bool> UpdateAsync(int id, UpdateProjectDto input);
+    Task<DeleteProjectResult> DeleteAsync(int id);
 }

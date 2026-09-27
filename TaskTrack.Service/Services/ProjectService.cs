@@ -1,6 +1,7 @@
 ﻿using TaskTrack.Repo.Repositories;
 using TaskTrack.Service.DTOs;
 using TaskTrack.Service.Interfaces;
+using TaskTrack.Service.Results;
 
 namespace TaskTrack.Service.Services;
 
@@ -138,5 +139,20 @@ public class ProjectService : IProjectService
         };
 
         return _repository.UpdateAsync(id, changes);
+    }
+    public async Task<DeleteProjectResult> DeleteAsync(int id)
+    {
+        var project = await _repository.GetByIdWithDetailsAsync(id);
+
+        if (project is null)
+            return DeleteProjectResult.NotFound;
+
+        if (project.Tasks.Any())
+            return DeleteProjectResult.HasTasks;
+
+        var deleted = await _repository.DeleteAsync(id);
+        return deleted
+            ? DeleteProjectResult.Deleted
+            : DeleteProjectResult.NotFound;
     }
 }

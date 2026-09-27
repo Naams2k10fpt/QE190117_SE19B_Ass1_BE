@@ -98,4 +98,15 @@ public class ProjectRepository : IProjectRepository
         await _context.SaveChangesAsync();
         return true;
     }
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var project = await _context.Projects.FindAsync(id);
+
+        if (project is null)
+            return false;
+
+        _context.Projects.Remove(project);
+        await _context.SaveChangesAsync();
+        return true;
+    }
 }

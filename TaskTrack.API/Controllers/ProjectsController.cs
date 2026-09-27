@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TaskTrack.Service.DTOs;
 using TaskTrack.Service.Interfaces;
+using TaskTrack.Service.Results;
 
 namespace TaskTrack.API.Controllers;
 
@@ -116,6 +117,20 @@ public class ProjectsController : ControllerBase
 
         if (!updated)
             return NotFound();
+
+        return NoContent();
+    }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var result = await _service.DeleteAsync(id);
+
+        if (result == DeleteProjectResult.NotFound)
+            return NotFound();
+
+        if (result == DeleteProjectResult.HasTasks)
+            return BadRequest(new { message = "Project has linked tasks." });
 
         return NoContent();
     }
