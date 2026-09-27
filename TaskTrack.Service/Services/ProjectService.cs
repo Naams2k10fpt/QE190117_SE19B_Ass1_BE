@@ -82,4 +82,22 @@ public class ProjectService : IProjectService
                 p.Department.DepartmentName))
             .ToList();
     }
+    public async Task<List<ProjectListItemDto>> SearchAsync(
+    string? name, short? status, int? departmentId)
+    {
+        var projects = await _repository.SearchAsync(
+            name, status, departmentId);
+
+        return projects
+            .Select(p => new ProjectListItemDto(
+                p.ProjectId,
+                p.ProjectName,
+                p.Description,
+                p.StartDate,
+                p.EndDate,
+                p.Status,
+                p.DepartmentId,
+                p.Department.DepartmentName))
+            .ToList();
+    }
 }

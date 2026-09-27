@@ -43,4 +43,29 @@ public class ProjectRepository : IProjectRepository
             .OrderBy(p => p.ProjectName)
             .ToListAsync();
     }
+    public Task<List<Project>> SearchAsync(
+    string? name, short? status, int? departmentId)
+    {
+        IQueryable<Project> query = _context.Projects
+            .AsNoTracking()
+            .Include(p => p.Department)
+            .Where(p => p.IsActive);
+
+        if (!string.IsNullOrWhiteSpace(name))
+        {
+            var pattern = $"%{name.Trim()}%";
+            query = query.Where(p =>
+                EF.Functions.ILike(p.ProjectName, pattern));
+        }
+
+        if (status.HasValue)
+            query = query.Where(p => p.Status == status.Value);
+
+        if (departmentId.HasValue)
+            query = query.Where(p => p.DepartmentId == departmentId.Value);
+
+        return query
+            .OrderBy(p => p.ProjectName)
+            .ToListAsync();
+    }
 }
