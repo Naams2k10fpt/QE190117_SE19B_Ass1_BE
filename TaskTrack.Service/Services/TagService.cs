@@ -24,4 +24,24 @@ public class TagService : ITagService
                 tag.Color))
             .ToList();
     }
+    public Task<bool> NameExistsAsync(string name, int? excludeId = null)
+    {
+        return _repository.NameExistsAsync(name, excludeId);
+    }
+
+    public async Task<TaskTagDto> CreateAsync(CreateTagDto input)
+    {
+        var tag = new TaskTrack.Repo.Models.Tag
+        {
+            TagName = input.TagName.Trim(),
+            Color = input.Color?.Trim().ToUpperInvariant()
+        };
+
+        var saved = await _repository.AddAsync(tag);
+
+        return new TaskTagDto(
+            saved.TagId,
+            saved.TagName,
+            saved.Color);
+    }
 }

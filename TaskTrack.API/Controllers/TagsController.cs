@@ -21,4 +21,18 @@ public class TagsController : ControllerBase
         var tags = await _service.GetAllAsync();
         return Ok(tags);
     }
+    [HttpPost]
+    public async Task<ActionResult<TaskTagDto>> Create(
+    [FromBody] CreateTagDto input)
+    {
+        if (await _service.NameExistsAsync(input.TagName))
+        {
+            ModelState.AddModelError(
+                "TagName", "Tag name already exists.");
+            return ValidationProblem(ModelState);
+        }
+
+        var created = await _service.CreateAsync(input);
+        return StatusCode(201, created);
+    }
 }
