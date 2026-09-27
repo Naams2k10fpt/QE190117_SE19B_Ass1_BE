@@ -3,12 +3,41 @@ using TaskTrack.Repo.Data;
 using TaskTrack.Repo.Repositories;
 using TaskTrack.Service.Interfaces;
 using TaskTrack.Service.Services;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var databaseUrl = builder.Configuration["DATABASE_URL"];
+
+if (!string.IsNullOrWhiteSpace(databaseUrl))
+{
+    var uri = new Uri(databaseUrl);
+    var credentials = uri.UserInfo.Split(':', 2);
+
+    if (uri.Scheme is not ("postgres" or "postgresql") ||
+        credentials.Length != 2 ||
+        string.IsNullOrWhiteSpace(uri.Host) ||
+        string.IsNullOrWhiteSpace(uri.AbsolutePath.Trim('/')))
+    {
+        throw new InvalidOperationException("DATABASE_URL is invalid.");
+    }
+
+    connectionString = new NpgsqlConnectionStringBuilder
+    {
+        Host = uri.Host,
+        Port = uri.Port > 0 ? uri.Port : 5432,
+        Database = Uri.UnescapeDataString(uri.AbsolutePath.TrimStart('/')),
+        Username = Uri.UnescapeDataString(credentials[0]),
+        Password = Uri.UnescapeDataString(credentials[1]),
+        SslMode = SslMode.Require
+    }.ConnectionString;
+}
+
+if (string.IsNullOrWhiteSpace(connectionString))
+    throw new InvalidOperationException("Database connection is not configured.");
 
 builder.Services.AddDbContext<TaskTrackDbContext>(options =>
     options.UseNpgsql(connectionString));
