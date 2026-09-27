@@ -46,4 +46,16 @@ public class DepartmentsController : ControllerBase
         var departments = await _service.SearchByNameAsync(name.Trim());
         return Ok(departments);
     }
+
+    [HttpPost]
+    public async Task<ActionResult<DepartmentDetailDto>> Create(
+    [FromBody] CreateDepartmentDto input)
+    {
+        var created = await _service.CreateAsync(input);
+
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id = created.DepartmentId },
+            created);
+    }
 }

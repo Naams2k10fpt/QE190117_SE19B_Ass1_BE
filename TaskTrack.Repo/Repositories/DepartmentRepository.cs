@@ -40,4 +40,10 @@ public class DepartmentRepository : IDepartmentRepository
             .OrderBy(d => d.DepartmentName)
             .ToListAsync();
     }
+    public async Task<Department> AddAsync(Department department)
+    {
+        _context.Departments.Add(department);
+        await _context.SaveChangesAsync();
+        return department;
+    }
 }

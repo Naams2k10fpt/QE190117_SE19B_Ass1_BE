@@ -58,4 +58,22 @@ public class DepartmentService : IDepartmentService
                 d.DepartmentDescription))
             .ToList();
     }
+    public async Task<DepartmentDetailDto> CreateAsync(CreateDepartmentDto input)
+    {
+        var department = new TaskTrack.Repo.Models.Department
+        {
+            DepartmentName = input.DepartmentName.Trim(),
+            DepartmentDescription = input.DepartmentDescription.Trim(),
+            IsActive = true
+        };
+
+        var saved = await _repository.AddAsync(department);
+
+        return new DepartmentDetailDto(
+            saved.DepartmentId,
+            saved.DepartmentName,
+            saved.DepartmentDescription,
+            saved.IsActive,
+            new List<DepartmentProjectDto>());
+    }
 }
