@@ -12,4 +12,7 @@ public interface ITaskRepository
     Task<List<TaskEntity>> SearchAsync(
     string? title, short? status, short? priority,
     int? projectId, int? tagId);
+    Task<bool> ProjectExistsAsync(int projectId);
+    Task<bool> TagsExistAsync(List<int> tagIds);
+    Task<TaskEntity> AddAsync(TaskEntity task, List<int> tagIds);
 }

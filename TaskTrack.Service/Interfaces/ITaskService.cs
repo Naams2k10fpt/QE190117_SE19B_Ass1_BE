@@ -10,4 +10,7 @@ public interface ITaskService
     Task<List<TaskListItemDto>> SearchAsync(
     string? title, short? status, short? priority,
     int? projectId, int? tagId);
+    Task<bool> ProjectExistsAsync(int projectId);
+    Task<bool> TagsExistAsync(List<int> tagIds);
+    Task<TaskDetailDto> CreateAsync(CreateTaskDto input);
 }

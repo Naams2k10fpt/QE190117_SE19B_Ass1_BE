@@ -97,4 +97,34 @@ public class TaskService : ITaskService
                 t.ModifiedDate))
             .ToList();
     }
+    public Task<bool> ProjectExistsAsync(int projectId)
+    {
+        return _repository.ProjectExistsAsync(projectId);
+    }
+
+    public Task<bool> TagsExistAsync(List<int> tagIds)
+    {
+        return _repository.TagsExistAsync(tagIds);
+    }
+
+    public async Task<TaskDetailDto> CreateAsync(CreateTaskDto input)
+    {
+        var task = new TaskTrack.Repo.Models.Task
+        {
+            Title = input.Title.Trim(),
+            Description = input.Description?.Trim(),
+            Status = input.Status!.Value,
+            Priority = input.Priority!.Value,
+            DueDate = input.DueDate,
+            ProjectId = input.ProjectId!.Value,
+            IsActive = true
+        };
+
+        var saved = await _repository.AddAsync(
+            task, input.TagIds ?? new List<int>());
+
+        return await GetByIdAsync(saved.TaskId)
+            ?? throw new InvalidOperationException(
+                "Created task could not be loaded.");
+    }
 }

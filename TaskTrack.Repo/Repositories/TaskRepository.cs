@@ -74,4 +74,42 @@ public class TaskRepository : ITaskRepository
             .OrderBy(t => t.TaskId)
             .ToListAsync();
     }
+    public Task<bool> ProjectExistsAsync(int projectId)
+    {
+        return _context.Projects
+            .AnyAsync(p => p.ProjectId == projectId);
+    }
+
+    public async Task<bool> TagsExistAsync(List<int> tagIds)
+    {
+        var ids = tagIds.Distinct().ToArray();
+
+        if (ids.Length == 0)
+            return true;
+
+        var count = await _context.Tags
+            .CountAsync(tag => ids.Contains(tag.TagId));
+
+        return count == ids.Length;
+    }
+
+    public async Task<TaskEntity> AddAsync(
+        TaskEntity task, List<int> tagIds)
+    {
+        var ids = tagIds.Distinct().ToArray();
+
+        if (ids.Length > 0)
+        {
+            var tags = await _context.Tags
+                .Where(tag => ids.Contains(tag.TagId))
+                .ToListAsync();
+
+            foreach (var tag in tags)
+                task.Tags.Add(tag);
+        }
+
+        _context.Tasks.Add(task);
+        await _context.SaveChangesAsync();
+        return task;
+    }
 }

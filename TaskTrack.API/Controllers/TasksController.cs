@@ -69,4 +69,31 @@ public class TasksController : ControllerBase
 
         return Ok(tasks);
     }
+
+    [HttpPost]
+    public async Task<ActionResult<TaskDetailDto>> Create(
+    [FromBody] CreateTaskDto input)
+    {
+        if (input.ProjectId.HasValue &&
+            !await _service.ProjectExistsAsync(input.ProjectId.Value))
+        {
+            ModelState.AddModelError("ProjectId", "Project does not exist.");
+        }
+
+        if (input.TagIds is { Count: > 0 } &&
+            !await _service.TagsExistAsync(input.TagIds))
+        {
+            ModelState.AddModelError(
+                "TagIds", "One or more tags do not exist.");
+        }
+
+        if (!ModelState.IsValid)
+            return ValidationProblem(ModelState);
+
+        var created = await _service.CreateAsync(input);
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id = created.TaskId },
+            created);
+    }
 }
