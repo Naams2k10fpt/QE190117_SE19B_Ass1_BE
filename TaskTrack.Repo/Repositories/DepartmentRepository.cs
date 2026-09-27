@@ -46,4 +46,19 @@ public class DepartmentRepository : IDepartmentRepository
         await _context.SaveChangesAsync();
         return department;
     }
+    public async Task<bool> UpdateAsync(
+    int id, string name, string description, bool isActive)
+    {
+        var department = await _context.Departments.FindAsync(id);
+
+        if (department is null)
+            return false;
+
+        department.DepartmentName = name;
+        department.DepartmentDescription = description;
+        department.IsActive = isActive;
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
 }

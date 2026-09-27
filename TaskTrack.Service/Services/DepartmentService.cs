@@ -76,4 +76,15 @@ public class DepartmentService : IDepartmentService
             saved.IsActive,
             new List<DepartmentProjectDto>());
     }
+    public Task<bool> UpdateAsync(int id, UpdateDepartmentDto input)
+    {
+        var isActive = input.IsActive
+            ?? throw new ArgumentException("IsActive is required.");
+
+        return _repository.UpdateAsync(
+            id,
+            input.DepartmentName.Trim(),
+            input.DepartmentDescription.Trim(),
+            isActive);
+    }
 }

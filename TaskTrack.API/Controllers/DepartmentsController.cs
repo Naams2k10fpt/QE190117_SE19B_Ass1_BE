@@ -58,4 +58,16 @@ public class DepartmentsController : ControllerBase
             new { id = created.DepartmentId },
             created);
     }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(
+    int id, [FromBody] UpdateDepartmentDto input)
+    {
+        var updated = await _service.UpdateAsync(id, input);
+
+        if (!updated)
+            return NotFound();
+
+        return NoContent();
+    }
 }
