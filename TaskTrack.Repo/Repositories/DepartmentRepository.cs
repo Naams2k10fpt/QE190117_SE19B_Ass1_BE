@@ -31,4 +31,13 @@ public class DepartmentRepository : IDepartmentRepository
             .Include(d => d.Projects)
             .FirstOrDefaultAsync(d => d.DepartmentId == id);
     }
+    public Task<List<Department>> SearchByNameAsync(string name)
+    {
+        return _context.Departments
+            .AsNoTracking()
+            .Where(d => d.IsActive &&
+                EF.Functions.ILike(d.DepartmentName, $"%{name}%"))
+            .OrderBy(d => d.DepartmentName)
+            .ToListAsync();
+    }
 }

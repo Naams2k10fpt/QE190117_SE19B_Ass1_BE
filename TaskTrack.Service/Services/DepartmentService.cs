@@ -47,4 +47,15 @@ public class DepartmentService : IDepartmentService
             department.IsActive,
             projects);
     }
+    public async Task<List<DepartmentListItemDto>> SearchByNameAsync(string name)
+    {
+        var departments = await _repository.SearchByNameAsync(name);
+
+        return departments
+            .Select(d => new DepartmentListItemDto(
+                d.DepartmentId,
+                d.DepartmentName,
+                d.DepartmentDescription))
+            .ToList();
+    }
 }

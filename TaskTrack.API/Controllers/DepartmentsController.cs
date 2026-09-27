@@ -32,4 +32,18 @@ public class DepartmentsController : ControllerBase
 
         return Ok(department);
     }
+
+    [HttpGet("search")]
+    public async Task<ActionResult<List<DepartmentListItemDto>>> Search(
+    [FromQuery] string? name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            ModelState.AddModelError("name", "Name is required.");
+            return ValidationProblem(ModelState);
+        }
+
+        var departments = await _service.SearchByNameAsync(name.Trim());
+        return Ok(departments);
+    }
 }
