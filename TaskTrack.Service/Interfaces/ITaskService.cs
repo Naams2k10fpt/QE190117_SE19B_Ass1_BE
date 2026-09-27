@@ -5,4 +5,5 @@ namespace TaskTrack.Service.Interfaces;
 public interface ITaskService
 {
     Task<List<TaskListItemDto>> GetActiveAsync();
+    Task<TaskDetailDto?> GetByIdAsync(int id);
 }

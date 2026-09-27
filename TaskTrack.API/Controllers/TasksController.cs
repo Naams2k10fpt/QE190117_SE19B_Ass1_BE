@@ -21,4 +21,15 @@ public class TasksController : ControllerBase
         var tasks = await _service.GetActiveAsync();
         return Ok(tasks);
     }
+
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<TaskDetailDto>> GetById(int id)
+    {
+        var task = await _service.GetByIdAsync(id);
+
+        if (task is null)
+            return NotFound();
+
+        return Ok(task);
+    }
 }

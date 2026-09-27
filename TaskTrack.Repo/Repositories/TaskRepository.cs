@@ -25,4 +25,12 @@ public class TaskRepository : ITaskRepository
             .OrderBy(t => t.TaskId)
             .ToListAsync();
     }
+    public Task<TaskEntity?> GetByIdWithDetailsAsync(int id)
+    {
+        return _context.Tasks
+            .AsNoTracking()
+            .Include(t => t.Project)
+            .Include(t => t.Tags)
+            .FirstOrDefaultAsync(t => t.TaskId == id && t.IsActive);
+    }
 }

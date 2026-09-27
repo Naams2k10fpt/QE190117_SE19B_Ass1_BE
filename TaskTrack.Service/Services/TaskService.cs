@@ -31,4 +31,31 @@ public class TaskService : ITaskService
                 t.ModifiedDate))
             .ToList();
     }
+    public async Task<TaskDetailDto?> GetByIdAsync(int id)
+    {
+        var task = await _repository.GetByIdWithDetailsAsync(id);
+
+        if (task is null)
+            return null;
+
+        var tags = task.Tags
+            .OrderBy(tag => tag.TagName)
+            .Select(tag => new TaskTagDto(
+                tag.TagId, tag.TagName, tag.Color))
+            .ToList();
+
+        return new TaskDetailDto(
+            task.TaskId,
+            task.Title,
+            task.Description,
+            task.Status,
+            task.Priority,
+            task.DueDate,
+            task.ProjectId,
+            task.Project.ProjectName,
+            task.IsActive,
+            task.CreatedDate,
+            task.ModifiedDate,
+            tags);
+    }
 }
