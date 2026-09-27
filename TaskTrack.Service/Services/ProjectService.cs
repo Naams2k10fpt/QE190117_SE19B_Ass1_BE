@@ -124,4 +124,19 @@ public class ProjectService : IProjectService
             ?? throw new InvalidOperationException(
                 "Created project could not be loaded.");
     }
+    public Task<bool> UpdateAsync(int id, UpdateProjectDto input)
+    {
+        var changes = new TaskTrack.Repo.Models.Project
+        {
+            ProjectName = input.ProjectName.Trim(),
+            Description = input.Description?.Trim(),
+            StartDate = input.StartDate!.Value,
+            EndDate = input.EndDate,
+            Status = input.Status!.Value,
+            DepartmentId = input.DepartmentId!.Value,
+            IsActive = input.IsActive!.Value
+        };
+
+        return _repository.UpdateAsync(id, changes);
+    }
 }

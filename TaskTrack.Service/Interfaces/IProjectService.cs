@@ -11,4 +11,5 @@ public interface IProjectService
     string? name, short? status, int? departmentId);
     Task<bool> DepartmentExistsAsync(int departmentId);
     Task<ProjectDetailDto> CreateAsync(CreateProjectDto input);
+    Task<bool> UpdateAsync(int id, UpdateProjectDto input);
 }

@@ -90,4 +90,33 @@ public class ProjectsController : ControllerBase
             new { id = created.ProjectId },
             created);
     }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(
+    int id, [FromBody] UpdateProjectDto input)
+    {
+        if (input.StartDate.HasValue && input.EndDate.HasValue &&
+            input.EndDate.Value < input.StartDate.Value)
+        {
+            ModelState.AddModelError(
+                "EndDate", "EndDate cannot be before StartDate.");
+        }
+
+        if (input.DepartmentId.HasValue &&
+            !await _service.DepartmentExistsAsync(input.DepartmentId.Value))
+        {
+            ModelState.AddModelError(
+                "DepartmentId", "Department does not exist.");
+        }
+
+        if (!ModelState.IsValid)
+            return ValidationProblem(ModelState);
+
+        var updated = await _service.UpdateAsync(id, input);
+
+        if (!updated)
+            return NotFound();
+
+        return NoContent();
+    }
 }

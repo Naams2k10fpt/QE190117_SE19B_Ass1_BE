@@ -80,4 +80,22 @@ public class ProjectRepository : IProjectRepository
         await _context.SaveChangesAsync();
         return project;
     }
+    public async Task<bool> UpdateAsync(int id, Project changes)
+    {
+        var project = await _context.Projects.FindAsync(id);
+
+        if (project is null)
+            return false;
+
+        project.ProjectName = changes.ProjectName;
+        project.Description = changes.Description;
+        project.StartDate = changes.StartDate;
+        project.EndDate = changes.EndDate;
+        project.Status = changes.Status;
+        project.DepartmentId = changes.DepartmentId;
+        project.IsActive = changes.IsActive;
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
 }
