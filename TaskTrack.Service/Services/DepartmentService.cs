@@ -1,6 +1,7 @@
 ﻿using TaskTrack.Repo.Repositories;
 using TaskTrack.Service.DTOs;
 using TaskTrack.Service.Interfaces;
+using TaskTrack.Service.Results;
 
 namespace TaskTrack.Service.Services;
 
@@ -86,5 +87,20 @@ public class DepartmentService : IDepartmentService
             input.DepartmentName.Trim(),
             input.DepartmentDescription.Trim(),
             isActive);
+    }
+    public async Task<DeleteDepartmentResult> DeleteAsync(int id)
+    {
+        var department = await _repository.GetByIdWithProjectsAsync(id);
+
+        if (department is null)
+            return DeleteDepartmentResult.NotFound;
+
+        if (department.Projects.Any())
+            return DeleteDepartmentResult.HasProjects;
+
+        var deleted = await _repository.DeleteAsync(id);
+        return deleted
+            ? DeleteDepartmentResult.Deleted
+            : DeleteDepartmentResult.NotFound;
     }
 }

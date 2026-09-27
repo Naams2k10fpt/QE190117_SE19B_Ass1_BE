@@ -12,4 +12,5 @@ public interface IDepartmentRepository
     Task<Department> AddAsync(Department department);
     Task<bool> UpdateAsync(
     int id, string name, string description, bool isActive);
+    Task<bool> DeleteAsync(int id);
 }
