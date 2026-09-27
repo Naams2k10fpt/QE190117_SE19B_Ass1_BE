@@ -32,4 +32,12 @@ public class TasksController : ControllerBase
 
         return Ok(task);
     }
+
+    [HttpGet("project/{projectId:int}")]
+    public async Task<ActionResult<List<TaskListItemDto>>> GetByProject(
+    int projectId)
+    {
+        var tasks = await _service.GetByProjectAsync(projectId);
+        return Ok(tasks);
+    }
 }

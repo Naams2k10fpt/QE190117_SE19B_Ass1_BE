@@ -58,4 +58,22 @@ public class TaskService : ITaskService
             task.ModifiedDate,
             tags);
     }
+    public async Task<List<TaskListItemDto>> GetByProjectAsync(int projectId)
+    {
+        var tasks = await _repository.GetByProjectAsync(projectId);
+
+        return tasks
+            .Select(t => new TaskListItemDto(
+                t.TaskId,
+                t.Title,
+                t.Description,
+                t.Status,
+                t.Priority,
+                t.DueDate,
+                t.ProjectId,
+                t.Project.ProjectName,
+                t.CreatedDate,
+                t.ModifiedDate))
+            .ToList();
+    }
 }

@@ -8,4 +8,5 @@ public interface ITaskRepository
 {
     Task<List<TaskEntity>> GetActiveWithProjectAsync();
     Task<TaskEntity?> GetByIdWithDetailsAsync(int id);
+    Task<List<TaskEntity>> GetByProjectAsync(int projectId);
 }
