@@ -14,4 +14,5 @@ public interface ITaskService
     Task<bool> TagsExistAsync(List<int> tagIds);
     Task<TaskDetailDto> CreateAsync(CreateTaskDto input);
     Task<bool> UpdateAsync(int id, UpdateTaskDto input);
+    Task<bool> SoftDeleteAsync(int id);
 }

@@ -155,4 +155,19 @@ public class TaskRepository : ITaskRepository
         await _context.SaveChangesAsync();
         return true;
     }
+    public async Task<bool> SoftDeleteAsync(int id)
+    {
+        var task = await _context.Tasks
+            .FirstOrDefaultAsync(t => t.TaskId == id && t.IsActive);
+
+        if (task is null)
+            return false;
+
+        task.IsActive = false;
+        task.ModifiedDate = DateTime.SpecifyKind(
+            DateTime.UtcNow, DateTimeKind.Unspecified);
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
 }

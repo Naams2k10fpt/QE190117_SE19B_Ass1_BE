@@ -141,4 +141,8 @@ public class TaskService : ITaskService
 
         return _repository.UpdateAsync(id, changes, input.TagIds!);
     }
+    public Task<bool> SoftDeleteAsync(int id)
+    {
+        return _repository.SoftDeleteAsync(id);
+    }
 }

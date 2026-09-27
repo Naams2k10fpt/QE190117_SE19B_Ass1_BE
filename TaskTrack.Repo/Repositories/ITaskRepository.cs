@@ -16,4 +16,5 @@ public interface ITaskRepository
     Task<bool> TagsExistAsync(List<int> tagIds);
     Task<TaskEntity> AddAsync(TaskEntity task, List<int> tagIds);
     Task<bool> UpdateAsync(int id, TaskEntity changes, List<int> tagIds);
+    Task<bool> SoftDeleteAsync(int id);
 }
