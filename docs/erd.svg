@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="590" viewBox="0 0 1040 590" role="img" aria-labelledby="title desc">
+  <title id="title">TaskTrack database entity relationship diagram</title>
+  <desc id="desc">Department has many Projects; Project has many Tasks; Task and Tag have a many-to-many relationship through TaskTag.</desc>
+  <style>
+    .bg { fill: #f8fafc; }
+    .box { fill: #fff; stroke: #cbd5e1; stroke-width: 2; }
+    .head { fill: #1d4ed8; }
+    .join { fill: #4338ca; }
+    .heading { font: 700 17px 'Segoe UI', Arial, sans-serif; fill: #fff; }
+    .field { font: 14px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+    .key { font: 700 14px 'Segoe UI', Arial, sans-serif; fill: #1d4ed8; }
+    .relation { fill: none; stroke: #475569; stroke-width: 2.5; }
+    .cardinality { font: 700 14px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+    .caption { font: 13px 'Segoe UI', Arial, sans-serif; fill: #475569; }
+  </style>
+  <rect class="bg" width="1040" height="590"/>
+  <text x="32" y="34" style="font:700 22px 'Segoe UI',Arial,sans-serif;fill:#0f172a">TaskTrack · PostgreSQL ERD</text>
+  <text x="32" y="55" class="caption">PK = primary key · FK = foreign key · TaskTag links tasks and tags</text>
+
+  <rect class="box" x="30" y="145" width="255" height="158" rx="10"/>
+  <path class="head" d="M40 145h235a10 10 0 0 1 10 10v30H30v-30a10 10 0 0 1 10-10z"/>
+  <text class="heading" x="46" y="171">Department</text>
+  <text class="key" x="46" y="211">PK  DepartmentID</text>
+  <text class="field" x="46" y="237">DepartmentName</text>
+  <text class="field" x="46" y="263">DepartmentDescription</text>
+  <text class="field" x="46" y="289">IsActive</text>
+
+  <rect class="box" x="355" y="78" width="270" height="251" rx="10"/>
+  <path class="head" d="M365 78h250a10 10 0 0 1 10 10v30H355V88a10 10 0 0 1 10-10z"/>
+  <text class="heading" x="371" y="104">Project</text>
+  <text class="key" x="371" y="143">PK  ProjectID</text>
+  <text class="field" x="371" y="168">ProjectName</text>
+  <text class="field" x="371" y="193">Description</text>
+  <text class="field" x="371" y="218">StartDate · EndDate</text>
+  <text class="field" x="371" y="243">Status</text>
+  <text class="key" x="371" y="268">FK  DepartmentID</text>
+  <text class="field" x="371" y="293">IsActive · CreatedDate</text>
+
+  <rect class="box" x="700" y="78" width="305" height="277" rx="10"/>
+  <path class="head" d="M710 78h285a10 10 0 0 1 10 10v30H700V88a10 10 0 0 1 10-10z"/>
+  <text class="heading" x="716" y="104">Task</text>
+  <text class="key" x="716" y="143">PK  TaskID</text>
+  <text class="field" x="716" y="168">Title</text>
+  <text class="field" x="716" y="193">Description</text>
+  <text class="field" x="716" y="218">Status · Priority</text>
+  <text class="field" x="716" y="243">DueDate</text>
+  <text class="key" x="716" y="268">FK  ProjectID</text>
+  <text class="field" x="716" y="293">IsActive</text>
+  <text class="field" x="716" y="318">CreatedDate · ModifiedDate</text>
+
+  <rect class="box" x="355" y="425" width="270" height="103" rx="10"/>
+  <path class="join" d="M365 425h250a10 10 0 0 1 10 10v30H355v-30a10 10 0 0 1 10-10z"/>
+  <text class="heading" x="371" y="451">TaskTag</text>
+  <text class="key" x="371" y="488">PK, FK  TaskID</text>
+  <text class="key" x="371" y="514">PK, FK  TagID</text>
+
+  <rect class="box" x="700" y="425" width="305" height="129" rx="10"/>
+  <path class="head" d="M710 425h285a10 10 0 0 1 10 10v30H700v-30a10 10 0 0 1 10-10z"/>
+  <text class="heading" x="716" y="451">Tag</text>
+  <text class="key" x="716" y="488">PK  TagID</text>
+  <text class="field" x="716" y="514">TagName</text>
+  <text class="field" x="716" y="540">Color</text>
+
+  <path class="relation" d="M285 225H355"/>
+  <text class="cardinality" x="293" y="216">1</text><text class="cardinality" x="336" y="216">N</text>
+  <path class="relation" d="M625 225H700"/>
+  <text class="cardinality" x="634" y="216">1</text><text class="cardinality" x="680" y="216">N</text>
+  <path class="relation" d="M830 355V385H490V425"/>
+  <text class="cardinality" x="838" y="377">1</text><text class="cardinality" x="498" y="416">N</text>
+  <path class="relation" d="M625 490H700"/>
+  <text class="cardinality" x="634" y="481">N</text><text class="cardinality" x="681" y="481">1</text>
+</svg>
