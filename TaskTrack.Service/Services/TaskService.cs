@@ -127,4 +127,18 @@ public class TaskService : ITaskService
             ?? throw new InvalidOperationException(
                 "Created task could not be loaded.");
     }
+    public Task<bool> UpdateAsync(int id, UpdateTaskDto input)
+    {
+        var changes = new TaskTrack.Repo.Models.Task
+        {
+            Title = input.Title.Trim(),
+            Description = input.Description?.Trim(),
+            Status = input.Status!.Value,
+            Priority = input.Priority!.Value,
+            DueDate = input.DueDate,
+            ProjectId = input.ProjectId!.Value
+        };
+
+        return _repository.UpdateAsync(id, changes, input.TagIds!);
+    }
 }

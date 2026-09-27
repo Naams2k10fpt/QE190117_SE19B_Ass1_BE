@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using TaskTrack.Repo.Data;
 using TaskEntity = TaskTrack.Repo.Models.Task;
 
@@ -111,5 +112,47 @@ public class TaskRepository : ITaskRepository
         _context.Tasks.Add(task);
         await _context.SaveChangesAsync();
         return task;
+    }
+    public async Task<bool> UpdateAsync(
+    int id, TaskEntity changes, List<int> tagIds)
+    {
+        var task = await _context.Tasks
+            .Include(t => t.Tags)
+            .FirstOrDefaultAsync(t => t.TaskId == id && t.IsActive);
+
+        if (task is null)
+            return false;
+
+        task.Title = changes.Title;
+        task.Description = changes.Description;
+        task.Status = changes.Status;
+        task.Priority = changes.Priority;
+        task.DueDate = changes.DueDate;
+        task.ProjectId = changes.ProjectId;
+        task.ModifiedDate = DateTime.SpecifyKind(
+            DateTime.UtcNow, DateTimeKind.Unspecified);
+
+        var requestedIds = tagIds.ToHashSet();
+
+        foreach (var tag in task.Tags
+            .Where(t => !requestedIds.Contains(t.TagId))
+            .ToList())
+        {
+            task.Tags.Remove(tag);
+        }
+
+        var currentIds = task.Tags.Select(t => t.TagId).ToHashSet();
+        var requestedTags = await _context.Tags
+            .Where(t => requestedIds.Contains(t.TagId))
+            .ToListAsync();
+
+        foreach (var tag in requestedTags)
+        {
+            if (currentIds.Add(tag.TagId))
+                task.Tags.Add(tag);
+        }
+
+        await _context.SaveChangesAsync();
+        return true;
     }
 }

@@ -96,4 +96,32 @@ public class TasksController : ControllerBase
             new { id = created.TaskId },
             created);
     }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(
+    int id, [FromBody] UpdateTaskDto input)
+    {
+        if (input.ProjectId.HasValue &&
+            !await _service.ProjectExistsAsync(input.ProjectId.Value))
+        {
+            ModelState.AddModelError("ProjectId", "Project does not exist.");
+        }
+
+        if (input.TagIds is { Count: > 0 } &&
+            !await _service.TagsExistAsync(input.TagIds))
+        {
+            ModelState.AddModelError(
+                "TagIds", "One or more tags do not exist.");
+        }
+
+        if (!ModelState.IsValid)
+            return ValidationProblem(ModelState);
+
+        var updated = await _service.UpdateAsync(id, input);
+
+        if (!updated)
+            return NotFound();
+
+        return NoContent();
+    }
 }

@@ -13,4 +13,5 @@ public interface ITaskService
     Task<bool> ProjectExistsAsync(int projectId);
     Task<bool> TagsExistAsync(List<int> tagIds);
     Task<TaskDetailDto> CreateAsync(CreateTaskDto input);
+    Task<bool> UpdateAsync(int id, UpdateTaskDto input);
 }
