@@ -65,4 +65,21 @@ public class ProjectService : IProjectService
             project.CreatedDate,
             tasks);
     }
+    public async Task<List<ProjectListItemDto>> GetByDepartmentAsync(
+    int departmentId)
+    {
+        var projects = await _repository.GetByDepartmentAsync(departmentId);
+
+        return projects
+            .Select(p => new ProjectListItemDto(
+                p.ProjectId,
+                p.ProjectName,
+                p.Description,
+                p.StartDate,
+                p.EndDate,
+                p.Status,
+                p.DepartmentId,
+                p.Department.DepartmentName))
+            .ToList();
+    }
 }

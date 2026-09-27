@@ -8,4 +8,5 @@ public interface IProjectRepository
 {
     Task<List<Project>> GetActiveWithDepartmentAsync();
     Task<Project?> GetByIdWithDetailsAsync(int id);
+    Task<List<Project>> GetByDepartmentAsync(int departmentId);
 }

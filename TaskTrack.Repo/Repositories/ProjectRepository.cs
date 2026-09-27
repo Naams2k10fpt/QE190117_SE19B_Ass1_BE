@@ -34,4 +34,13 @@ public class ProjectRepository : IProjectRepository
                 .ThenInclude(t => t.Tags)
             .FirstOrDefaultAsync(p => p.ProjectId == id);
     }
+    public Task<List<Project>> GetByDepartmentAsync(int departmentId)
+    {
+        return _context.Projects
+            .AsNoTracking()
+            .Include(p => p.Department)
+            .Where(p => p.IsActive && p.DepartmentId == departmentId)
+            .OrderBy(p => p.ProjectName)
+            .ToListAsync();
+    }
 }
